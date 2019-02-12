@@ -1,6 +1,6 @@
 BioNLP-OST corpus pre-processing with AlvisNLP
 
-## Preprocessing tools
+## Included preprocessing
 
 * Tokenization and sentence splitting
 * Abbreviations (Ab3P)
@@ -32,7 +32,7 @@ BioNLP-OST corpus pre-processing with AlvisNLP
 
 **Or**
 
-You can use the all-included docker image.
+You can use the batteries-included docker image.
 
 
 ## File formats
