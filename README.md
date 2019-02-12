@@ -11,6 +11,7 @@ BioNLP-OST corpus pre-processing with AlvisNLP
   * Chemicals (Chemspot)
   * Genes and Proteins (GeniaTagger)
 * Term extraction (YaTeA)
+* Chunking (GeniaTagger)
 * Dependency parsing (CCG, Enju and Stanford)
 * Ask for more, we may have something in store...
 
