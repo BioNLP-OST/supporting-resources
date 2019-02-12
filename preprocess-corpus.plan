@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<alvisnlp-plan id="preprocess_corpus">
+
+ <read class="TextFileReader">
+   <sourcePath filter=".txt$">/projet/maiage/save/textemig/projet-work/biotopes/corpus/BioNLP-ST_BB-cat+ner/dev/</sourcePath>
+    <baseNameId/>
+  </read>
+
+  <segmentation href="res://segmentation.plan"/>
+
+   <genia class="GeniaTagger">
+     <chunkFeature>chunk</chunkFeature>
+     <entityFeature>genia-entity</entityFeature>
+   </genia>
+
+   <!-- stemming -->
+   <stem class="PorterStemmer"/>
+
+  <!-- Syntactic parsing -->
+  <syntax>
+    <ccg class="CCGParser">
+      <executable>/projet/mig/save/textemig/projet-work/software/install/CCG/bin/parser</executable>
+      <parserModel>/projet/mig/save/textemig/projet-work/software/install/CCG/models/parser</parserModel>
+      <superModel>/projet/mig/save/textemig/projet-work/software/install/CCG/models/super_bio-1.00</superModel>
+      <relationName>ccg-dependencies</relationName>
+      <!-- CCG (value=false) or AG (value=true) -->
+      <maxRuns>50</maxRuns>
+      <lpTransformation>true</lpTransformation>
+    </ccg>
+
+    <enju class="EnjuParser">
+      <enjuExecutable>/projet/mig/save/textemig/projet-work/software/install/enju/bin/enju</enjuExecutable>
+      <dependenciesRelationName>enju-dependencies</dependenciesRelationName>
+      <biology/>
+    </enju>
+
+    <stanford class="StanfordParser">
+      <dependencyRelationName>stanford-dependencies</dependencyRelationName>
+    </stanford>
+  </syntax>
+
+  <!-- Named entity recognition (LOCATION, PERSON, ORGANISATION) -->
+  <stanford-ner class="StanfordNER">
+    <labelFeatureName>stanford-label</labelFeatureName>
+    <targetLayerName>stanford-ne</targetLayerName>
+    <searchInContents/>
+  </stanford-ner>
+
+  <!-- Recognition of chemicals -->
+  <chemspot class="Chemspot">
+    <noDict/>
+  </chemspot>
+ 
+  <!-- Abbreviation detection -->
+  <abbrev class="Ab3P">
+    <installDir>/projet/maiage/save/textemig/projet-work/software/Ab3P-v1.5</installDir>
+    <!-- layers: 'short-forms', 'long-forms' -->
+    <!-- in 'short-forms', feature 'long-form' -->
+    <!-- relations: 'abbreviations', roles 'short-form', 'long-form' -->
+  </abbrev>
+
+  <!-- Term extraction (Yatea) -->
+  <yatea class="YateaExtractor">
+    <xmlTermsFile>yatea/candidates.xml</xmlTermsFile>
+    <posFeature>pos</posFeature>
+    <configDir>/projet/mig/save/textemig/projet-work/resources/YaTeA/config-habitats</configDir>
+    <localeDir>/projet/mig/save/textemig/projet-work/resources/YaTeA/locale</localeDir>
+    <rcFile>/projet/mig/save/textemig/projet-work/biotopes/plans/yatea.rc</rcFile>
+    <perlLib>/projet/mig/work/textemig/biotopes/software/yatea-lib</perlLib>
+  </yatea>
+
+  
+  <export-sentences class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>genia-pos.txt</corpusFile>
+    <lines>documents.sections.layer:sentences</lines>
+    <columns separator=";">
+      section.document.@id;
+      start ^ "-" ^ end;
+      @form
+    </columns>
+  </export-sentences>
+
+  <export-words class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>genia-pos.txt</corpusFile>
+    <lines>documents.sections.layer:words</lines>
+    <columns separator=";">
+      section.document.@id;
+      start ^ "-" ^ end;
+      @form
+    </columns>
+  </export-words>
+  
+  <export-genia class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>genia-pos.txt</corpusFile>
+    <lines>documents.sections.layer:words</lines>
+    <columns separator=";">
+      section.document.@id;
+      start ^ "-" ^ end;
+      @form;
+      @pos;
+      @lemma;
+      @chunk;
+      @genia-entity
+    </columns>
+  </export-genia>
+  
+  <export-stems class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>stems.txt</corpusFile>
+    <lines>documents.sections.layer:words</lines>
+    <columns separator=";">
+      section.document.@id;
+      start ^ "-" ^ end;
+      @form;
+      @stem
+    </columns>
+  </export-stems>
+  
+  <export-ccg class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>ccg-dependencies.txt</corpusFile>
+    <lines>documents.sections.relations:ccg-dependencies.tuples</lines>
+    <columns separator=";">
+      section.document.@id;
+      args:sentence.start ^ "-" ^ args:sentence.end;
+      @label;
+      args:head.@form;
+      args:head.start ^ "-" ^ args:head.end;
+      args:dependent.@form;
+      args:dependent.start ^ "-" ^ args:dependent.end
+    </columns>
+  </export-ccg>
+  
+  <export-enju class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>enju-dependencies.txt</corpusFile>
+  <lines>documents.sections.relations:enju-dependencies.tuples</lines>
+    <columns separator=";">
+      section.document.@id;
+      args:sentence.start ^ "-" ^ args:sentence.end;
+      @label;
+      args:head.@form;
+      args:head.start ^ "-" ^ args:head.end;
+      @arg-type;
+      args:dependent.@form;
+      args:dependent.start ^ "-" ^ args:dependent.end
+    </columns>
+</export-enju>
+
+<export-stanford class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>stanford-dependencies.txt</corpusFile>
+    <lines>documents.sections.relations:stanford-dependencies.tuples</lines>
+    <columns separator=";">
+      section.document.@id;
+      args:sentence.start ^ "-" ^ args:sentence.end;
+      @label;
+      args:head.@form;
+      args:head.start ^ "-" ^ args:head.end;
+      args:dependent.@form;
+      args:dependent.start ^ "-" ^ args:dependent.end
+    </columns>
+</export-stanford>
+
+<export-abbreviations class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>abbreviations.txt</corpusFile>
+    <lines>documents.sections.relations:abbreviations.tuples</lines>
+    <columns separator=";">
+      section.document.@id;
+      args:short-form.@form;
+      args:short-form.start ^ "-" ^ args:short-form.end;
+      args:long-form.@form;
+      args:long-form.start ^ "-" ^ args:long-form.end
+    </columns>
+</export-abbreviations>
+
+<export-stanford-ne class="TabularExport">
+    <outDir>.</outDir>
+    <corpusFile>stanford-ne.txt</corpusFile>
+    <lines>documents.sections.layer:stanford-ne</lines>
+    <columns separator=";">
+      section.document.@id;
+      start ^ "-" ^ end;
+      @form;
+      @stanford-label
+    </columns>
+</export-stanford-ne>
+
+ <export-chemicals class="TabularExport">
+    <outDir>.</outDir>
+    <files>$</files>
+    <fileName>"chem-ne.txt"</fileName>
+    <lines>documents.sections.layer:chemspot</lines>
+    <columns>
+      section.document.@id,
+      start ^ "-" ^ end,
+      @form,
+      @chem-type
+    </columns>
+</export-chemicals>
+
+
+<!--
+
+    <rdf class="RDFExport">
+      <outDir>.</outDir>
+      <files>$</files>
+      <fileName>test.ttl"</fileName>
+      <format>turtle</format>
+      <prefixes>
+    	OBT=http://bibliome.jouy.inra.fr/OntoBiotope#,
+    	obta=http://bibliome.jouy.inra.fr/OntoBiotope/Annotation#,
+    	pmid=https://www.ncbi.nlm.nih.gov/pubmed/,
+    	taxid=https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=
+      </prefixes>
+      <statements separator=";">
+    	documents.sections.layer.uri:set(obta^id:unique);
+
+    	documents.sections.layer[@taxid].(
+    	  stmt:res(rdf:type, taxid^@taxid)
+    	| stmt:res(obta:document, pmid^section.document.@id)
+    	| stmt:str(obta:form, @form)
+    	);
+	
+    	documents.sections.layer[@concept-id].(
+    	  stmt:res(rdf:type, OBT^str:after:':'(@concept-id))
+    	| stmt:res(obta:document, pmid^section.document.@id)
+    	| stmt:str(obta:form, @form)
+    	);
+
+    	documents.sections.relations:CooccurrenceLocalization.tuples as l.args:Bacterium.
+    	stmt:res(OBT:lives_in, obta^l.args:Localization.id:unique)
+      </statements>
+    </rdf>
+-->
+
+</alvisnlp-plan>
