@@ -44,6 +44,6 @@ Reading particular XML files require to write a connector with XSLT.
 
 ### Output
 
-Tabular text files. We can also export in XML^*, RDF^*, PubAnnotation JSON.
+Tabular text files. We can also export in XML*, RDF*, PubAnnotation JSON.
 
-^* requires to write a connector.
+* requires to write a connector.
