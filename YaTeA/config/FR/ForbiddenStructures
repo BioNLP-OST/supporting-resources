@@ -1,0 +1,34 @@
+# Valeur\Type information	Position	Action	Longueur	Pivot
+# Action peut etre "split" ou "ANY	delete"
+# Type info peut etre POS, LM ou LF - on peut faire des melanges
+
+ADJ\POS PRP\POS NUM\POS	ANY	split	4	NUM
+ADJ\POS KON\POS DET:ART\POS	ANY	split	1	KON
+#NOM ADJ KON NOM ADJ	détresse respiratoire et complications métaboliques	Nb occ: 1
+NOM\POS ADJ\POS KON\POS NOM\POS ADJ\POS	ANY	split	1	KON
+#NOM KON DET:ART NOM	dépistage et le diagnostic	Nb occ: 1
+NOM\POS KON\POS DET:ART\POS NOM\POS	ANY	split	1	KON
+#NOM KON NUM NOM	repas et trois collations	Nb occ: 1
+NOM\POS KON\POS NUM\POS NOM\POS	ANY	split	1	KON
+# NOM KON de NOM	obésité et de diabète	Nb occ: 1
+#NOM VER:pper KON DET:ART NOM de NOM	groupes étudiés et la durée de suivi	Nb occ: 1
+# ADJ NOM du NAM de DET:ART NOM   Autre nom du Carré de l' Est    Nb occ: 1
+#POS	ADJ NOM du NAM	ANY	split	1	NOM
+# ADJ de DET:ART NOM      proche de la Cancoillotte       Nb occ: 1
+ADJ\POS PRP\POS DET:ART\POS NOM\POS	ANY	split	4	PRP
+ADJ\POS PRP\POS DET:ART\POS NAM\POS	ANY	split	4	PRP
+ADJ\POS PRP:det\POS NOM\POS	ANY	split	3	PRP:det
+ADJ\POS PRP:det\POS NAM\POS	ANY	split	3	PRP:det
+# LM	proche	ANY	delete	1
+autre\LF nom\LF	ANY	delete	2
+en\LF cas\LF de\LF	ANY	delete	3
+#      fabrication fromagère une occasion      Nb occ: 1
+NOM\LF ADJ\LF DET:ART\LF NOM\LF	ANY	split	4	DET:ART
+# A faire 
+# NOM de DET:ART NOM de PRO:IND NOM à NOM VER:pper ADJ    sein de la pâte de certains fromages à pâte pressée cuite       Nb occ: 2
+sein\LF de\LF	ANY	delete	2
+NOM\POS DET:ART\POS NOM\POS	ANY	split	3	DET:ART
+du\LF à\LF un\LF	ANY	split	3	du
+au\LF sein\LF de\LF	3	ANY	split	sein
+ADJ\POS PRP\POS ADJ\POS	3	ANY	split	PRP
+PRP\LF NUM\POS aide\LF PRP\POS	4	ANY	split	aide
